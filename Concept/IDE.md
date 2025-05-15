@@ -1,5 +1,6 @@
 ### [Лучшие IDE Python для Linux](https://losst.pro/luchshie-ide-python-dlya-linux)
-> Самая лучшая IDE для змейки это хорошо настроенный sublime text  
+> Самая лучшая IDE для змейки это хорошо настроенный sublime text
+
 А что собственно сложного в **Vim**? Два режима работы(три, если учитывать visual), да и несколько простых комбинаций клавиш и команд.   
 [Vim](https://github.com/AV-ghub/Linux/blob/main/007%20%D0%A3%D1%82%D0%B8%D0%BB%D0%B8%D1%82%D1%8B%20%D0%B8%20%D0%9F%D0%9E/Vim/Res.md)
 
