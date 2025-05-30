@@ -84,3 +84,67 @@ CREATE TABLE target_table (
 * **Типы данных должны быть совместимы** (например, `NUMERIC → Float64`)
 * ClickHouse **не поддерживает NULL** — замени `None` на значение по умолчанию (если нужно)
 * Это **вставка одним пакетом** — без проверки, очистки, дедупликации и т.д.
+
+## ✅ Вариант с батчами
+
+```python
+import psycopg2
+import clickhouse_connect
+
+# --- Параметры
+BATCH_SIZE = 1000
+
+# --- Подключение к PostgreSQL
+pg_conn = psycopg2.connect(
+    host="localhost",
+    port=5432,
+    database="source_db",
+    user="pg_user",
+    password="pg_pass"
+)
+pg_cursor = pg_conn.cursor(name='pg_stream_cursor')  # ← серверный курсор
+
+# --- Подключение к ClickHouse
+ch_client = clickhouse_connect.get_client(
+    host='localhost',
+    port=8123,
+    username='default',
+    password=''
+)
+
+# --- Запрос из PostgreSQL (курсор по частям)
+pg_cursor.execute("SELECT id, name, value FROM source_table")
+
+batch_number = 0
+while True:
+    rows = pg_cursor.fetchmany(BATCH_SIZE)
+    if not rows:
+        break
+
+    # --- Вставка в ClickHouse
+    ch_client.insert(
+        table='target_table',
+        data=rows,
+        column_names=['id', 'name', 'value']
+    )
+    batch_number += 1
+    print(f"✅ Вставлен batch {batch_number}, строк: {len(rows)}")
+
+# --- Закрытие соединений
+pg_cursor.close()
+pg_conn.close()
+print("🚀 Готово.")
+```
+
+---
+
+## 🧠 Что здесь важно
+
+| Механизм              | Описание                                                                     |
+| --------------------- | ---------------------------------------------------------------------------- |
+| `cursor(name=...)`    | Используется **серверный курсор** PostgreSQL — он не грузит все строки сразу |
+| `fetchmany()`         | Забирает **частями по BATCH\_SIZE**                                          |
+| `insert()` ClickHouse | Вставка списка строк                                                         |
+| `print()`             | Прогресс видно в реальном времени                                            |
+
+---
