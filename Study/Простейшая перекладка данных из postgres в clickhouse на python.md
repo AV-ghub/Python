@@ -1,4 +1,4 @@
-## Gростой пример перекладки данных из PostgreSQL в ClickHouse на Python
+## Простой пример перекладки данных из PostgreSQL в ClickHouse на Python
 > без всяких ETL-фреймворков — просто с использованием `psycopg2` и `clickhouse-connect` (или `clickhouse-driver`
 
 ---
