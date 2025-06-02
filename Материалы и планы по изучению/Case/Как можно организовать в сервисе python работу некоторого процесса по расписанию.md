@@ -358,6 +358,8 @@ except (KeyboardInterrupt, SystemExit):
 
 ### ⚙️ **3. Юнит-файл systemd (`etl.service`)**
 
+[Systemd](https://github.com/AV-ghub/Linux/blob/main/008%20Administration/Systemd.md)
+
 Создай файл:
 
 ```bash
