@@ -1,5 +1,5 @@
 ## Исходный скрипт
-```
+```python
 import time
 import logging
 # from datetime import datetime
