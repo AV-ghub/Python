@@ -1,3 +1,56 @@
+## Исходный скрипт
+```
+import time
+import logging
+# from datetime import datetime
+from apscheduler.schedulers.background import BackgroundScheduler
+from dotenv import load_dotenv
+import os
+
+# import os
+# print("Current working directory:", os.getcwd())
+
+# Настройка логирования
+logging.basicConfig(
+    filename="/home/admin/systemd/integration/etl_service.log",
+    # filename="\python\systemd\etl_service.log",
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    encoding="utf-8"
+)
+
+def run_etl():
+    logging.info("Запуск ETL-процесса.")
+    # Здесь твой ETL: выгрузка, преобразование, загрузка
+    # time.sleep(1)
+    logging.info("ETL завершён.")
+
+load_dotenv(dotenv_path=".env")
+
+pg_host = os.getenv("PG_HOST")
+pg_user = os.getenv("PG_USER")
+click_host = os.getenv("CLICK_HOST")
+
+logging.info('pg_host: ' + pg_host)
+logging.info('pg_user: ' + pg_user)
+logging.info('click_host: ' + click_host)
+
+scheduler = BackgroundScheduler()
+# scheduler.add_job(run_etl, 'cron', minute='*/1')
+scheduler.add_job(run_etl, 'interval', seconds=5)
+scheduler.start()
+
+logging.info("ETL-служба запущена.")
+
+try:
+    while True:
+        time.sleep(1)
+except (KeyboardInterrupt, SystemExit):
+    scheduler.shutdown()
+    logging.info("ETL-служба остановлена.")
+
+```
+
 ## Передварительные замечания
 ### Есть код, предназначенный для запуска в systemd и в нем запускается процесс **scheduler.start()**  
 
